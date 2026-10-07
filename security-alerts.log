@@ -1,0 +1,9 @@
+2026-10-07 09:12:03 ALERT Failed login | user=admin | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:12:11 ALERT Failed login | user=admin | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:12:18 ALERT Failed login | user=admin | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:12:25 ALERT Failed login | user=admin | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:13:02 ALERT Successful login | user=admin | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:15:47 ALERT Privileged command executed | user=admin | command="cat /etc/passwd" | host=WEB-SRV01
+2026-10-07 09:18:22 ALERT New user created | user=backup_service | created_by=admin | host=WEB-SRV01
+2026-10-07 09:21:09 ALERT Successful login | user=backup_service | src_ip=203.0.113.45 | host=WEB-SRV01
+2026-10-07 09:24:36 ALERT Security logs cleared | user=admin | host=WEB-SRV01
