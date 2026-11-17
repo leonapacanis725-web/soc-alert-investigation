@@ -1,57 +1,72 @@
 # SOC Alert Investigation
 
-## Project Objective
+## 1. Objective
 
-The objective of this project was to investigate simulated security alerts and identify suspicious activity by analyzing authentication, account, and system events.
+Investigate a sequence of simulated security alerts on `WEB-SRV01` to determine whether the authentication and account changes indicate a possible compromise. Reconstruct the event timeline, identify suspicious behavior, and recommend defensive response actions based on the available log evidence.
 
-## Scenario
+## 2. Environment & Tools
 
-A series of alerts were generated on a simulated web server named `WEB-SRV01`. I investigated the events to determine whether they represented normal activity or a possible security incident.
+- **Environment:** Linux terminal
+- **Evidence source:** `security-alerts.log` (nine simulated events)
+- **Tools:** `cat`, `grep`, `grep -c`, `grep -E`, `wc -l`, and Nano
+- **Documentation:** `findings.md`
 
-## Skills Practiced
+The source IP `203.0.113.45` is in a documentation-only IP range. The host, accounts, and events are fictional and used for defensive training.
 
-- SOC alert triage
-- Log analysis
-- Authentication analysis
-- Timeline reconstruction
-- Identifying suspicious account activity
-- Recognizing possible persistence
-- Recognizing possible defense evasion
-- Incident escalation and response recommendations
+## 3. Methodology & Commands
 
-## Tools and Commands Used
+The following commands reproduce the main checks against the included log file.
 
-- Linux terminal
-- `cat`
-- `grep`
-- `grep -c`
-- `grep -E`
-- `wc -l`
-- Nano
+**Review the complete evidence:**
+```bash
+cat security-alerts.log
+```
 
-## Investigation
+**Count the recorded alerts:**
+```bash
+grep -c "ALERT" security-alerts.log
+wc -l security-alerts.log
+```
 
-I reviewed 9 simulated security events.
+**Isolate failed and successful authentication events:**
+```bash
+grep -E "Failed login|Successful login" security-alerts.log
+```
 
-The investigation identified four failed login attempts against the `admin` account from the same source IP. These attempts were followed by a successful login from that IP.
+**Trace activity associated with the source IP:**
+```bash
+grep "203.0.113.45" security-alerts.log
+```
 
-After the successful login, the `admin` account viewed `/etc/passwd`, a new account named `backup_service` was created, and that new account later logged in from the same source IP.
+**Review account creation and log-clearing activity:**
+```bash
+grep -E "New user created|Security logs cleared" security-alerts.log
+```
 
-The timeline ended with security logs being cleared.
+These commands provide a repeatable way to review the supplied evidence; they are examples for reproducing the analysis, not a claim that every command was originally run exactly as written.
 
-## Assessment
+## 4. Key Findings
 
-The combined activity suggests a possible account compromise rather than an isolated failed-login alert.
+The nine-event timeline contains the following sequence:
 
-The creation and use of `backup_service` could indicate persistence, while clearing security logs could indicate defense evasion.
+1. Four failed login attempts targeted `admin` from `203.0.113.45` between 09:12:03 and 09:12:25 on 2026-10-07.
+2. The same source IP successfully authenticated as `admin` at 09:13:02.
+3. At 09:15:47, `admin` ran `cat /etc/passwd`, displaying local account information.
+4. At 09:18:22, `admin` created a new account named `backup_service`.
+5. At 09:21:09, `backup_service` successfully logged in from the same source IP.
+6. At 09:24:36, the `admin` account cleared security logs.
 
-I would escalate the activity for further investigation.
+**Assessment:** The connected sequence is consistent with a possible account compromise. The repeated failures followed by a successful login may indicate password guessing; the new account may represent persistence; and the log-clearing event may indicate an attempt to remove evidence. The available records do not prove the cause or establish who controlled the source IP, so further investigation is required.
 
-## Files
+## 5. Remediation / Security Takeaway
 
-- `security-alerts.log` — simulated alert data analyzed during the investigation
-- `findings.md` — documented findings, assessment, and recommended response
+A defender should preserve the available logs and related evidence, investigate the source IP and authentication timeline, and verify whether `backup_service` was authorized. If unauthorized access is confirmed, contain the affected accounts, rotate credentials, review privileged access, and search other host and network telemetry for related activity. Avoid deleting or altering evidence before the investigation is complete.
 
-## Disclaimer
+## Project Files
 
-This project uses fictional security events and a documentation-only IP address. It was created for defensive cybersecurity education and portfolio development.
+- `security-alerts.log` — simulated alert data reviewed in this investigation
+- `findings.md` — detailed findings, assessment, and response recommendations
+
+## Scope & Disclaimer
+
+This is a documentation-based defensive exercise using fictional events and a documentation-only IP address. It does not represent a live incident, production system access, or a confirmed compromise.
