@@ -70,3 +70,9 @@ A defender should preserve the available logs and related evidence, investigate 
 ## Scope & Disclaimer
 
 This is a documentation-based defensive exercise using fictional events and a documentation-only IP address. It does not represent a live incident, production system access, or a confirmed compromise.
+
+## Continue Learning with Better Hacker
+
+Explore the related free beginner lesson and hands-on practice:
+
+[SOC & SIEM lesson](https://betterhacker.org/#soc-siem-lesson) · [Defensive Security practice](https://betterhacker.org/#practice-defensive-security)
